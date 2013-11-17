@@ -1,0 +1,57 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import sys
+import re
+from subprocess import *
+import itunes
+from getopt import getopt
+
+# My affiliate ID.
+myID = '10l4Fv'
+
+# Set the environment for calling CocoaDialog.
+dialogpath = '/Applications/CocoaDialog.app/Contents/MacOS/'
+dialogenv = {'PATH': dialogpath}
+
+# Utility function for shortening text.
+def shorten(str, n):
+  'Truncate str to no more than n chars'
+  return str if len(str) <= n else str[:n-1] + '…'
+
+# Search for specified item.
+opts, args = getopt(sys.argv[1:],
+                    'bimsaf',
+                    ['book', 'ios', 'mac', 'song', 'album', 'movie'])
+if not opts:
+  items = itunes.search(args[0], order='popular', limit=25)
+for o, a in opts:
+  if o in ('-b', '--book'):
+    items = itunes.search_book(args[0], order='popular', limit=25)
+  elif o in ('-i', '--ios'):
+    items = itunes.search_ios(args[0], order='popular', limit=25)
+  elif o in ('-m', '--mac'):
+    items = itunes.search_mac(args[0], order='popular', limit=25)
+  elif o in ('-s', '--song'):
+    items = itunes.search_track(args[0], order='popular', limit=25)
+  elif o in ('-a', '--album'):
+    items = itunes.search_album(args[0], order='popular', limit=25)
+  elif o in ('-f', '--movie'):
+    items = itunes.search_movie(args[0], order='popular', limit=25)
+
+# Construct lists of names and URLs.
+names = [ '%2d  %s' % (n+1, i.name) for (n, i) in enumerate(items) ]
+urls = [ i.url for i in items ]
+
+# Display a dialog asking for which link to use.
+chosen = Popen(['CocoaDialog', 'standard-dropdown', '--exit-onchange', '--title', 'iTunes Search Results', '--text', 'Choose an item', '--items'] + names, stdout=PIPE, env =dialogenv).communicate()[0].split('\n')
+
+# Print the URL for the chosen item with my affiliate ID added.
+if int(chosen[0]) == 1 or int(chosen[0]) == 4:
+  itemURL = urls[int(chosen[1])]
+  if '?' in itemURL:
+    idURL = '%s&at=%s' % (itemURL, myID)
+  else:
+    idURL = '%s?at=%s' % (itemURL, myID)
+  sys.stdout.write(idURL)
+
