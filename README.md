@@ -23,13 +23,17 @@ Because the iTunes stores are so big, the search can be limited to specific medi
 
 If no option is provided, a generic search is performed, which typically isn't very useful.
 
+
 ## iTunes Search Link ##
 
 An AppleScript for use with [BBEdit][4] to create [Markdown reference-style affiliate links][5] to items in iTunes, App, or Mac App Stores. It takes the current selection as the search string, asks the user which media type to search for, and calls `isearch` to present the search results to the user. After the user chooses, the selected text is turned into a link with a numbered reference at the bottom of the page.
 
+`iTunes Search Link` should be put in BBEdit's Scripts folder. It expects to find `isearch`, `bbstdin`, and `nextreflink` in `~/Dropbox/bin`.
+
 ## bbstin and nextreflink ##
 
 Helper scripts that allow `iTunes Search Link` to work. Described in detail [here][6].
+
 
 
 
