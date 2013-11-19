@@ -46,7 +46,10 @@ for o, a in opts:
     items = itunes.search_movie(args[0], order='popular', limit=25)
 
 # Construct lists of names and URLs.
-names = [ u'{} by {}'.format(shorten(i.name, 50), shorten(str(i.artist), 30)) for i in items ]
+names = [ u'{:2d}  {} by {}'.format(n + 1,
+                                    shorten(i.name, 50),
+                                    shorten(str(i.artist), 30))
+          for n, i in enumerate(items) ]
 urls = [ i.url for i in items ]
 
 # Display a dialog asking for which link to use.
