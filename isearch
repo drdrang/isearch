@@ -1,9 +1,12 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sys
 from subprocess import *
 import itunes
 from getopt import getopt
+
+############################ Parameters #############################
 
 # My affiliate ID.
 myID = '10l4Fv'
@@ -11,6 +14,16 @@ myID = '10l4Fv'
 # Set the environment for calling CocoaDialog.
 dialogpath = '/Applications/CocoaDialog.app/Contents/MacOS/'
 dialogenv = {'PATH': dialogpath}
+
+
+############################ Functions ##############################
+
+def shorten(str, n):
+  'Truncate str to no more than n chars'
+  return str if len(str) <= n else str[:n-1] + u'…'
+
+
+########################### Main program ############################
 
 # Search for specified item.
 opts, args = getopt(sys.argv[1:],
@@ -33,7 +46,7 @@ for o, a in opts:
     items = itunes.search_movie(args[0], order='popular', limit=25)
 
 # Construct lists of names and URLs.
-names = [ '%2d  %s' % (n+1, i.name) for (n, i) in enumerate(items) ]
+names = [ u'{} by {}'.format(shorten(i.name, 50), shorten(str(i.artist), 30)) for i in items ]
 urls = [ i.url for i in items ]
 
 # Display a dialog asking for which link to use.
