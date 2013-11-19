@@ -19,8 +19,15 @@ dialogenv = {'PATH': dialogpath}
 ############################ Functions ##############################
 
 def shorten(str, n):
-  'Truncate str to no more than n chars'
+  'Return str truncated to no more than n chars.'
   return str if len(str) <= n else str[:n-1] + u'…'
+
+def affiliatize(url, id):
+  'Return URL with added affiliate code'
+  if '?' in url:
+    return '%s&at=%s' % (url, id)
+  else:
+    return '%s?at=%s' % (url)
 
 
 ########################### Main program ############################
@@ -45,6 +52,11 @@ for o, a in opts:
   elif o in ('-f', '--movie'):
     items = itunes.search_movie(args[0], order='popular', limit=25)
 
+# If only one result is returned, just use it and get out.
+if len(items) == 1:
+  sys.stdout.write(affiliatize(items[0].url, myID))
+  sys.exit()
+  
 # Construct lists of names and URLs.
 names = [ u'{:2d}  {} by {}'.format(n + 1,
                                     shorten(i.name, 50),
@@ -58,9 +70,5 @@ chosen = Popen(['CocoaDialog', 'standard-dropdown', '--exit-onchange', '--title'
 # Print the URL for the chosen item with my affiliate ID added.
 if int(chosen[0]) == 1 or int(chosen[0]) == 4:
   itemURL = urls[int(chosen[1])]
-  if '?' in itemURL:
-    idURL = '%s&at=%s' % (itemURL, myID)
-  else:
-    idURL = '%s?at=%s' % (itemURL, myID)
-  sys.stdout.write(idURL)
+  sys.stdout.write(affiliatize(itemURL, myID))
 
