@@ -58,7 +58,7 @@ if len(items) == 1:
   sys.exit()
 
 # Construct lists of names and URLs.
-names = [ u'{:2d}  {} by {}'.format(n + 1,
+names = [ '{:2d}  {} by {}'.format(n + 1,
                                     shorten(i.name, 50),
                                     shorten(unicode(i.artist), 30))
           for n, i in enumerate(items) ]
