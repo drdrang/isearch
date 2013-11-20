@@ -56,11 +56,11 @@ for o, a in opts:
 if len(items) == 1:
   sys.stdout.write(affiliatize(items[0].url, myID))
   sys.exit()
-  
+
 # Construct lists of names and URLs.
 names = [ u'{:2d}  {} by {}'.format(n + 1,
                                     shorten(i.name, 50),
-                                    shorten(str(i.artist), 30))
+                                    shorten(unicode(i.artist), 30))
           for n, i in enumerate(items) ]
 urls = [ i.url for i in items ]
 
